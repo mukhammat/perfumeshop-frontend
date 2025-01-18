@@ -17,14 +17,20 @@
               :key="perfume.id"
               class="card"
             >
+              <div class="card-image">
+                <img
+                  :src="perfume.image_path || '/img/default-imag.jpg'"
+                  alt="Perfume Image"
+                />
+              </div>
               <h3 class="card-title">{{ perfume.name }}</h3>
               <p class="card-price">Цена: {{ perfume.price }} USD</p>
               <div class="card-analogs">
                 <strong>Аналоги:</strong>
-                <span v-if="perfume.analogs">
+                <span v-if="perfume.analogs.length">
                   {{ perfume.analogs.map((analog) => analog.name).join(", ") }}
                 </span>
-                <span v-else>Нет аналогов</span>
+                <span v-else> Нет аналогов</span>
               </div>
             </div>
           </div>
@@ -33,6 +39,7 @@
     </div>
   </section>
 </template>
+
 
 <script>
 export default {
@@ -87,9 +94,13 @@ export default {
 <style scoped>
 .cards-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(3, 1fr); /* 3 карточки в строке */
   gap: 1.5rem;
   margin-top: 1.5rem;
+  justify-items: center; /* Центрируем карточки внутри их ячеек */
+  max-width: 1200px; /* Ограничиваем максимальную ширину контейнера */
+  margin-left: auto; /* Центрируем контейнер */
+  margin-right: auto;
 }
 
 .card {
@@ -99,6 +110,8 @@ export default {
   padding: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width: 100%; /* Карточки занимают 100% доступного пространства */
+  max-width: 300px; /* Но не больше 300px */
 }
 
 .card:hover {
@@ -126,4 +139,22 @@ export default {
   font-weight: bold;
   color: #333;
 }
+
+.card-image {
+  width: 100%;
+  height: 200px; /* Фиксированная высота для изображения */
+  overflow: hidden;
+  background-color: #f9f9f9; /* Белый фон по умолчанию */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px 8px 0 0; /* Скругление углов сверху */
+}
+
+.card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Сохранение пропорций изображения */
+}
+
 </style>
