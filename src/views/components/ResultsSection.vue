@@ -1,19 +1,35 @@
 <template>
-  <section class="section bg-light">
+  <section class="section pt-0">
     <div class="container">
-      <h2>Search Results</h2>
       <div v-if="loading" class="text-center">
         <p>Loading...</p>
       </div>
       <div v-else>
-        <ul v-if="results.length">
-          <li v-for="(result) in results" :key="result.id">
-            {{ result.name }} — {{ result.price }} USD аналог ({{result.analogs}})
-          </li>
-      </ul>
-        <p v-else>No results found for "{{ query }}".</p>
+        <div v-if="query.trim() !== '' && !results.length" class="text-center">
+          <p>Парфюмов не найдено</p>
+        </div>
+        <div v-else>
+          <h2 v-if="query.trim() !== ''">Результаты поиска</h2>
+          <h2 v-else>Все парфюмы</h2>
+          <div class="cards-container">
+            <div
+              v-for="(perfume) in query.trim() !== '' ? results : allPerfumes"
+              :key="perfume.id"
+              class="card"
+            >
+              <h3 class="card-title">{{ perfume.name }}</h3>
+              <p class="card-price">Цена: {{ perfume.price }} USD</p>
+              <div class="card-analogs">
+                <strong>Аналоги:</strong>
+                <span v-if="perfume.analogs">
+                  {{ perfume.analogs.map((analog) => analog.name).join(", ") }}
+                </span>
+                <span v-else>Нет аналогов</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      
     </div>
   </section>
 </template>
@@ -34,5 +50,80 @@ export default {
       required: true,
     },
   },
+  data() {
+    return {
+      allPerfumes: [],
+    };
+  },
+  watch: {
+    results(newResults) {
+      if (!newResults.length && this.query.trim() === "") {
+        this.fetchAllPerfumes();
+      }
+    },
+  },
+  methods: {
+    async fetchAllPerfumes() {
+      try {
+        const response = await fetch("http://localhost:3000/api/perfume/get-all");
+        if (!response.ok) {
+          throw new Error("Ошибка при загрузке всех парфюмов");
+        }
+        const data = await response.json();
+        this.allPerfumes = data;
+      } catch (error) {
+        console.error("Error fetching all perfumes:", error);
+      }
+    },
+  },
+  mounted() {
+    if (this.query.trim() === "") {
+      this.fetchAllPerfumes();
+    }
+  },
 };
 </script>
+
+<style scoped>
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.card {
+  background: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.card-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.card-price {
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+.card-analogs {
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.card-analogs strong {
+  font-weight: bold;
+  color: #333;
+}
+</style>

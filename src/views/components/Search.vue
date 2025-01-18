@@ -12,7 +12,6 @@
                   v-model="query"
                   @input="onInputChange"
                 ></base-input>
-                <base-button color="primary" type="submit">Search</base-button>
               </form>
             </div>
           </div>
