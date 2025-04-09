@@ -13,25 +13,33 @@
           <h2 v-else>Все парфюмы</h2>
           <div class="cards-container">
             <div
-              v-for="(perfume) in query.trim() !== '' ? results : allPerfumes"
-              :key="perfume.id"
-              class="card"
+            v-for="(perfume) in query.trim() !== '' ? results : allPerfumes"
+            :key="perfume.id"
+            class="card"
             >
-              <div class="card-image">
-                <img
-                  :src="perfume.image_path || '/img/default-imag.jpg'"
-                  alt="Perfume Image"
-                />
-              </div>
-              <h3 class="card-title">{{ perfume.name }}</h3>
-              <p class="card-price">Цена: {{ perfume.price }} USD</p>
-              <div class="card-analogs">
-                <strong>Аналоги:</strong>
-                <span v-if="perfume.analogs.length">
-                  {{ perfume.analogs.map((analog) => analog.name).join(", ") }}
-                </span>
-                <span v-else> Нет аналогов</span>
-              </div>
+            <router-link
+  :to="`/product/${perfume.id}`"
+  class="card"
+  tag="div"
+>
+  <div class="card-image">
+    <img
+      :src="perfume.images[0] || '/img/default-imag.jpg'"
+      alt="Perfume Image"
+    />
+  </div>
+  <h3 class="card-title">{{ perfume.name }}</h3>
+  <p class="card-price">Цена за 30мл: {{ perfume.price_30ml }} USD</p>
+  <p class="card-price">Цена за 50мл: {{ perfume.price_50ml }} USD</p>
+  <div class="card-analogs">
+    <strong>Аналог:</strong>
+    <span v-if="perfume.analog">
+      {{ perfume.analog }}
+    </span>
+    <span v-else> Нет аналогов</span>
+  </div>
+</router-link>
+
             </div>
           </div>
         </div>
@@ -72,7 +80,7 @@ export default {
   methods: {
     async fetchAllPerfumes() {
       try {
-        const response = await fetch("http://localhost:3000/api/perfume/get-all");
+        const response = await fetch("http://172.20.10.11:3000/api/perfume/get-all");
         if (!response.ok) {
           throw new Error("Ошибка при загрузке всех парфюмов");
         }
@@ -113,6 +121,13 @@ export default {
   width: 100%; /* Карточки занимают 100% доступного пространства */
   max-width: 300px; /* Но не больше 300px */
 }
+
+.card {
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+}
+
 
 .card:hover {
   transform: translateY(-5px);

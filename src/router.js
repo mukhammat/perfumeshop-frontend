@@ -8,6 +8,7 @@ import AppFooter from "./layout/AppFooter";
 // import Register from "./views/Register.vue";
 // import Profile from "./views/Profile.vue";
 import Menu from "./views/Menu.vue";
+import ProductPage from "./views/ProductPage.vue";
 
 Vue.use(Router);
 
@@ -23,6 +24,16 @@ export default new Router({
               footer: AppFooter,
           },
         },
+        {
+            path: '/product/:id',
+            name: 'ProductPage',
+            components: {
+                header: AppHeader,
+                default: ProductPage,
+                footer: AppFooter,
+            },
+            props: true
+        }
         // {
         //     path: "/components",
         //     name: "components",
