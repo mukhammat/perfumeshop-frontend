@@ -33,7 +33,7 @@ export default {
       this.loading = true;
 
       try {
-        const response = await fetch(`http://localhost:3000/api/perfume/search?query=${query}`);
+        const response = await fetch(`http://172.20.10.11:3000/api/perfume/search?query=${query}`);
         if (!response.ok) {
           throw new Error("Ошибка запроса");
         }

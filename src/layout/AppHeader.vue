@@ -6,7 +6,7 @@
                   :type="menu.type"
                   effect="dark"
                   expand
-                  title="Default Color"
+                  title="KONIL"
                   :content-id="`navbar-${menu.type}`">
             <div class="row" slot="content-header" slot-scope="{closeMenu}">
                 <div class="col-6 collapse-brand">

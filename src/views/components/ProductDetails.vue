@@ -1,15 +1,15 @@
 <template>
     <div class="product-card">
       <div class="product-image-container">
-        <img :src="product.image || '/img/default-image.jpg'" alt="product" class="product-image">
+        <img :src="product.image || '/img/default-imag.jpg'" alt="product" class="product-image">
         <span v-if="product.discount" class="discount-tag">-{{ product.discount }}%</span>
       </div>
       <div class="product-info">
         <h3 class="product-title">{{ product.name }}</h3>
-        <div class="product-rating">
-          <span v-for="i in 5" :key="i" class="star" :class="{ 'filled': i <= (product.rating || 0) }">★</span>
+        <!-- <div class="product-rating">
+          <span v-for="i in 5" :key="i" class="star" :class="{ 'filled': i <= (product.rating || 4) }">★</span>
           <span class="review-count" v-if="product.reviewCount">({{ product.reviewCount }})</span>
-        </div>
+        </div> -->
         <p class="product-description">{{ product.description }}</p>
   
         <!-- Новая секция с полями от парфюма -->
@@ -56,11 +56,14 @@
         </div>
   
         <div class="product-actions">
-          <button class="add-to-cart-btn" @click="addToCart">
+          <!-- <button class="add-to-cart-btn" @click="addToCart">
             <i class="fas fa-shopping-cart"></i> Добавить в корзину
           </button>
           <button class="wishlist-btn" @click="toggleWishlist">
             <i class="fas" :class="{ 'fa-heart': isInWishlist, 'fa-heart-o': !isInWishlist }"></i>
+          </button> -->
+          <button class="buy-now-btn" @click="buyViaWhatsApp">
+            <i class="fab fa-whatsapp"></i> Купить в WhatsApp
           </button>
         </div>
   
@@ -113,6 +116,19 @@
           volume: this.selectedVolume,
           quantity: 1
         });
+      },
+      buyViaWhatsApp() {
+        const message = `Здравствуйте! Я хочу купить парфюм:\n\n` +
+          `Название: ${this.product.name}\n` +
+          (this.product.perfume_code ? `Код: ${this.product.perfume_code}\n` : '') +
+          (this.product.analog ? `Аналог: ${this.product.analog}\n` : '') +
+          `Объем: ${this.selectedVolume}\n` +
+          `Цена: ${this.priceWithDiscount} USD`;
+
+        const phoneNumber = '+77077976243'; // Например: 966500000000
+        const encodedMessage = encodeURIComponent(message);
+        const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+        window.open(whatsappURL, '_blank');
       },
       toggleWishlist() {
         this.isInWishlist = !this.isInWishlist;
@@ -368,5 +384,30 @@
     color: #495057;
     font-size: 0.9rem;
   }
-  </style>
+
+  .buy-now-btn {
+  flex-grow: 1;
+  background: #25D366;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.buy-now-btn i {
+  margin-right: 8px;
+  font-size: 1.2rem;
+}
+
+.buy-now-btn:hover {
+  background: #1ebe5d;
+}
+
+</style>
   
